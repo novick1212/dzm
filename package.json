@@ -1,6 +1,6 @@
 {
   "name": "dzm",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Desktop-pinned markdown notepad for Windows",
   "author": "novick1212",
@@ -36,7 +36,9 @@
       "target": [
         {
           "target": "portable",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     },
