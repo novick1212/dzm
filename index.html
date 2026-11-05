@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="paper">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dzm</title>
+  </head>
+  <body>
+    <div id="app">
+      <header id="bar" class="drag">
+        <span id="brand">便签</span>
+        <div id="bar-actions">
+          <button id="new-note" class="icon-btn" title="新建便签 (Ctrl+N)">
+            <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+              <path d="M8 3.2v9.6M3.2 8h9.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </button>
+          <button id="lock-toggle" class="icon-btn" title="解锁编辑" aria-pressed="false">
+            <svg class="lock-closed" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+              <rect x="3.4" y="7" width="9.2" height="6.2" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.4" />
+              <path d="M5.6 7V5.3a2.4 2.4 0 0 1 4.8 0V7" fill="none" stroke="currentColor" stroke-width="1.4" />
+            </svg>
+            <svg class="lock-open" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+              <rect x="3.4" y="7" width="9.2" height="6.2" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.4" />
+              <path d="M5.6 7V5.3a2.4 2.4 0 0 1 4.8 0" fill="none" stroke="currentColor" stroke-width="1.4" />
+            </svg>
+          </button>
+          <button id="search-toggle" class="icon-btn" title="搜索 (Ctrl+F)">
+            <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+              <circle cx="7" cy="7" r="4.6" fill="none" stroke="currentColor" stroke-width="1.5" />
+              <path d="M10.4 10.4 L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </button>
+          <span id="hint">已锁定</span>
+        </div>
+      </header>
+
+      <div id="search-wrap" hidden>
+        <input id="search" type="text" placeholder="搜索便签…" spellcheck="false" />
+      </div>
+
+      <main id="list"></main>
+
+      <footer id="foot">
+        <span id="count"></span>
+        <button id="more" hidden></button>
+        <span id="resize" title="拖动调整大小"></span>
+      </footer>
+
+      <div id="toast" hidden></div>
+      <button id="copy-selection" hidden>复制</button>
+      <div id="menu" class="menu" hidden></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
