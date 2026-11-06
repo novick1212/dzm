@@ -304,7 +304,12 @@ body.is-unlocked #lock-toggle .lock-open {
 
 .note-head.drag:active {
   cursor: grabbing;
-}.time {
+}
+
+.time {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-family: var(--mono);
   font-size: 10px;
   color: var(--soft);
@@ -312,16 +317,29 @@ body.is-unlocked #lock-toggle .lock-open {
   white-space: nowrap;
 }
 
+.pin-mark {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+  flex: none;
+}
+
 .note-actions {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.note-actions .mini-btn {
   opacity: 0;
   transition: opacity 0.12s ease;
 }
 
-.note:hover .note-actions,
-.note.editing .note-actions {
+.note-actions .pin-btn,
+.note:hover .note-actions .mini-btn,
+.note.editing .note-actions .mini-btn {
   opacity: 1;
 }
 
@@ -343,6 +361,16 @@ body.is-unlocked #lock-toggle .lock-open {
   color: var(--accent);
   border-color: var(--accent);
   background: var(--accent-soft);
+}
+
+.mini-btn.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.mini-btn.pin-btn:not(.active) {
+  border-color: transparent;
 }
 
 .tool-btn.primary {

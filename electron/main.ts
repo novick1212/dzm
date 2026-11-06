@@ -429,6 +429,7 @@ function setupIpc() {
   ipcMain.handle('notes:list', () => store.list())
   ipcMain.handle('notes:create', (_e, body: string) => store.create(body ?? ''))
   ipcMain.handle('notes:update', (_e, payload: { id: string; body: string }) => store.update(payload.id, payload.body))
+  ipcMain.handle('notes:pin', (_e, payload: { id: string; pinned: boolean }) => store.setPinned(payload.id, payload.pinned))
   ipcMain.handle('notes:delete', (_e, id: string) => store.remove(id))
   ipcMain.handle('notes:undo-delete', (_e, token: string) => store.restore(token))
   ipcMain.handle('notes:export', async (_e, id: string) => {

@@ -3,6 +3,7 @@ export interface Note {
   created: string
   updated: string
   body: string
+  pinned?: boolean
 }
 export interface DzmConfig {
   theme: 'paper' | 'ink' | 'mist'

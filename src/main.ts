@@ -35,7 +35,11 @@ let idleTimer: number | null = null
 let toastTimer: number | null = null
 
 function sorted(values: Note[]): Note[] {
-  return [...values].sort((a, b) => (a.updated < b.updated ? 1 : a.updated > b.updated ? -1 : 0))
+  return [...values].sort((a, b) => {
+    const pinDiff = Number(Boolean(b.pinned)) - Number(Boolean(a.pinned))
+    if (pinDiff !== 0) return pinDiff
+    return a.updated < b.updated ? 1 : a.updated > b.updated ? -1 : 0
+  })
 }
 
 function formatTime(iso: string): string {
@@ -108,7 +112,8 @@ function render() {
 
 function readCard(note: Note): HTMLElement {
   const article = document.createElement('article')
-  article.className = 'note' + (expandedIds.has(note.id) ? ' expanded' : '')
+  article.className =
+    'note' + (expandedIds.has(note.id) ? ' expanded' : '') + (note.pinned ? ' pinned' : '')
   article.dataset.id = note.id
 
   const head = document.createElement('div')
@@ -118,10 +123,26 @@ function readCard(note: Note): HTMLElement {
   time.dataset.time = note.updated
   time.title = fullTime(note.updated)
   time.textContent = formatTime(note.updated)
+  if (note.pinned) {
+    const mark = document.createElement('span')
+    mark.className = 'pin-mark'
+    mark.title = '已置顶'
+    time.prepend(mark)
+  }
   head.append(time)
 
   const actions = document.createElement('div')
   actions.className = 'note-actions'
+  const pinBtn = document.createElement('button')
+  pinBtn.className = 'mini-btn pin-btn' + (note.pinned ? ' active' : '')
+  pinBtn.textContent = note.pinned ? '取消置顶' : '置顶'
+  pinBtn.title = note.pinned ? '取消置顶' : '置顶到列表顶部'
+  pinBtn.setAttribute('aria-pressed', note.pinned ? 'true' : 'false')
+  pinBtn.addEventListener('click', (event) => {
+    event.stopPropagation()
+    void togglePin(note)
+  })
+  actions.append(pinBtn)
   const copyBtn = document.createElement('button')
   copyBtn.className = 'mini-btn'
   copyBtn.textContent = '复制'
@@ -153,6 +174,7 @@ function readCard(note: Note): HTMLElement {
   article.addEventListener('contextmenu', (event) => {
     event.preventDefault()
     showMenu(event.clientX, event.clientY, [
+      { label: note.pinned ? '取消置顶' : '置顶', action: () => void togglePin(note) },
       { label: '复制全文', action: () => void copyText(note.body, '已复制便签') },
       {
         label: '导出 .md',
@@ -432,6 +454,21 @@ async function deleteNote(id: string) {
       notes = sorted(await window.dzm.listNotes())
       render()
     })
+  }
+}
+
+async function togglePin(note: Note) {
+  const next = !note.pinned
+  try {
+    const updated = await window.dzm.setPinned(note.id, next)
+    const index = notes.findIndex((item) => item.id === updated.id)
+    if (index >= 0) notes[index] = updated
+    notes = sorted(notes)
+    render()
+    showToast(next ? '已置顶' : '已取消置顶')
+  } catch (err) {
+    console.error(err)
+    showToast('置顶失败')
   }
 }
 

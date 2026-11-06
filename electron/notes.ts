@@ -62,6 +62,15 @@ export class NotesStore {
     return note
   }
 
+  setPinned(id: string, pinned: boolean): Note {
+    const found = this.find(id)
+    if (!found) throw new Error(`note not found: ${id}`)
+    const note: Note = { ...found.note, pinned }
+    this.writeFile(this.fileFor(found.note), note)
+    this.notifySaved(note)
+    return note
+  }
+
   remove(id: string): string | null {
     const found = this.find(id)
     if (!found) return null
@@ -120,7 +129,8 @@ export class NotesStore {
         id: meta.id || name.replace(/\.md$/, '').split('__').pop() || name,
         created: meta.created || fallback,
         updated: meta.updated || fallback,
-        body
+        body,
+        pinned: meta.pinned === 'true'
       }
     }
   }
@@ -142,7 +152,8 @@ export class NotesStore {
   }
 
   private writeFile(fullPath: string, note: Note): void {
-    const content = `---\nid: ${note.id}\ncreated: ${note.created}\nupdated: ${note.updated}\n---\n${note.body}`
+    const pinned = note.pinned ? '\npinned: true' : ''
+    const content = `---\nid: ${note.id}\ncreated: ${note.created}\nupdated: ${note.updated}${pinned}\n---\n${note.body}`
     const tmp = `${fullPath}.tmp`
     fs.writeFileSync(tmp, content, 'utf8')
     fs.renameSync(tmp, fullPath)

@@ -5,6 +5,7 @@ const api = {
   listNotes: (): Promise<Note[]> => ipcRenderer.invoke('notes:list'),
   createNote: (body: string): Promise<Note> => ipcRenderer.invoke('notes:create', body),
   updateNote: (id: string, body: string): Promise<Note> => ipcRenderer.invoke('notes:update', { id, body }),
+  setPinned: (id: string, pinned: boolean): Promise<Note> => ipcRenderer.invoke('notes:pin', { id, pinned }),
   deleteNote: (id: string): Promise<string | null> => ipcRenderer.invoke('notes:delete', id),
   undoDelete: (token: string): Promise<boolean> => ipcRenderer.invoke('notes:undo-delete', token),
   exportNote: (id: string): Promise<string | null> => ipcRenderer.invoke('notes:export', id),
